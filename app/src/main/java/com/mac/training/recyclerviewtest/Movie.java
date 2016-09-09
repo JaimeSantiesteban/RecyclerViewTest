@@ -5,23 +5,32 @@ package com.mac.training.recyclerviewtest;
  */
 public class Movie {
 
-    private String title, genre, year;
+    private String title, genre, year, imageUrl;
 
     public Movie() {
     }
 
-    public Movie(String title, String genre, String year) {
+    public Movie(String title, String genre, String year, String imageUrl) {
         this.title = title;
         this.genre = genre;
         this.year = year;
+        this.imageUrl = imageUrl;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String name) {
-        this.title = name;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 
     public String getYear() {
@@ -32,11 +41,11 @@ public class Movie {
         this.year = year;
     }
 
-    public String getGenre() {
-        return genre;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setGenre(String genre) {
-        this.genre = genre;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
