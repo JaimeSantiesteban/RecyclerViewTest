@@ -31,10 +31,12 @@ public class MainActivity extends AppCompatActivity {
                 new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+        /*recyclerView.setAdapter(moviesAdapter);*/
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        // set the adapter
         recyclerView.setAdapter(moviesAdapter);
 
         prepareMovieData();
-
     }
 
     private void prepareMovieData() {
