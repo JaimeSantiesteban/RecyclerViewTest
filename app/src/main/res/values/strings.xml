@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">RecyclerViewTest</string>
+    <string name="settings">Settings</string>
+    <string name="llayout_h">LLayout-H</string>
+    <string name="llayout_v">LLayout-V</string>
+    <string name="sglayout">SGLayout</string>
+    <string name="glayout">GLayout</string>
 </resources>

@@ -3,9 +3,13 @@ package com.mac.training.recyclerviewtest;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -33,8 +37,7 @@ public class MainActivity extends AppCompatActivity {
                 new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        /*recyclerView.setAdapter(moviesAdapter);*/
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        //recyclerView.addItemDecoration(new DividerItemDecoration(this, StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS));
         // set the adapter
         recyclerView.setAdapter(moviesAdapter);
 
@@ -105,4 +108,50 @@ public class MainActivity extends AppCompatActivity {
 
         moviesAdapter.notifyDataSetChanged();
     }
+
+    //menu
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        RecyclerView.LayoutManager layoutManager = null;
+        switch (id) {
+            case R.id.llmh:
+                // Setup layout manager for items with orientation
+                // Also supports `LinearLayoutManager.HORIZONTAL`
+                layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+                break;
+            case R.id.llmv:
+                layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+                break;
+            case R.id.sglm:
+                // First param is number of columns and second param is orientation i.e Vertical or Horizontal
+                layoutManager =
+                        new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                break;
+            case R.id.glm:
+                layoutManager = new GridLayoutManager(getApplicationContext(), 3);
+                break;
+            default:
+                break;
+        }
+
+        // Optionally customize the position you want to default scroll to
+        layoutManager.scrollToPosition(0);
+        // Attach layout manager to the RecyclerView
+        recyclerView.setLayoutManager(layoutManager);
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }
