@@ -1,4 +1,4 @@
-package com.mac.training.recyclerviewtest;
+package com.mac.training.recyclerviewtest.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,15 +8,31 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.mac.training.recyclerviewtest.model.Movie;
+import com.mac.training.recyclerviewtest.adapter.MoviesAdapter;
+import com.mac.training.recyclerviewtest.R;
+import com.mac.training.recyclerviewtest.RecyclerTouchListener;
+import com.mac.training.recyclerviewtest.model.MovieResponse;
+import com.mac.training.recyclerviewtest.rest.ApiClient;
+import com.mac.training.recyclerviewtest.rest.ApiInterface;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG_LOG = "superlog";
+    private final static String API_KEY = "7e8f60e325cd06e164799af1e317d7a7";
 
     private List<Movie> movieList = new ArrayList<>();
     private RecyclerView recyclerView;
@@ -32,14 +48,13 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = ((RecyclerView) findViewById(R.id.recycler_view));
 
-        moviesAdapter = new MoviesAdapter(movieList);
+        //moviesAdapter = new MoviesAdapter(movieList);
         RecyclerView.LayoutManager layoutManager =
                 new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        //recyclerView.addItemDecoration(new DividerItemDecoration(this, StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS));
         // set the adapter
-        recyclerView.setAdapter(moviesAdapter);
+//        recyclerView.setAdapter(moviesAdapter);
 
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
@@ -58,55 +73,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void prepareMovieData() {
-        Movie movie = new Movie("Mad Max: Fury Road", "Action & Adventure", "2015");
-        movieList.add(movie);
 
-        movie = new Movie("Inside Out", "Animation, Kids & Family", "2015");
-        movieList.add(movie);
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        Call<MovieResponse> call = apiService.getTopRatedMovies(API_KEY);
 
-        movie = new Movie("Star Wars: Episode VII - The Force Awakens", "Action", "2015");
-        movieList.add(movie);
+        call.enqueue(new Callback<MovieResponse>() {
+            @Override
+            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
+                int statusCode = response.code();
+                movieList = response.body().getResults();
+                Log.d(TAG_LOG, "Number of movies received: " + movieList.size());
+                moviesAdapter = new MoviesAdapter(movieList);
+                recyclerView.setAdapter(moviesAdapter);
+                //moviesAdapter.notifyDataSetChanged();
+            }
 
-        movie = new Movie("Shaun the Sheep", "Animation", "2015");
-        movieList.add(movie);
+            @Override
+            public void onFailure(Call<MovieResponse> call, Throwable t) {
+                // Log error here since request failed
+                Log.e(TAG_LOG, t.toString(), t);
+            }
+        });
 
-        movie = new Movie("The Martian", "Science Fiction & Fantasy", "2015");
-        movieList.add(movie);
 
-        movie = new Movie("Mission: Impossible Rogue Nation", "Action", "2015");
-        movieList.add(movie);
-
-        movie = new Movie("Up", "Animation", "2009");
-        movieList.add(movie);
-
-        movie = new Movie("Star Trek", "Science Fiction", "2009");
-        movieList.add(movie);
-
-        movie = new Movie("The LEGO Movie", "Animation", "2014");
-        movieList.add(movie);
-
-        movie = new Movie("Iron Man", "Action & Adventure", "2008");
-        movieList.add(movie);
-
-        movie = new Movie("Aliens", "Science Fiction", "1986");
-        movieList.add(movie);
-
-        movie = new Movie("Chicken Run", "Animation", "2000");
-        movieList.add(movie);
-
-        movie = new Movie("Back to the Future", "Science Fiction", "1985");
-        movieList.add(movie);
-
-        movie = new Movie("Raiders of the Lost Ark", "Action & Adventure", "1981");
-        movieList.add(movie);
-
-        movie = new Movie("Goldfinger", "Action & Adventure", "1965");
-        movieList.add(movie);
-
-        movie = new Movie("Guardians of the Galaxy", "Science Fiction & Fantasy", "2014");
-        movieList.add(movie);
-
-        moviesAdapter.notifyDataSetChanged();
+        //moviesAdapter.notifyDataSetChanged();
     }
 
     //menu

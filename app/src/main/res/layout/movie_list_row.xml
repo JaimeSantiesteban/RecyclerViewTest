@@ -33,4 +33,10 @@
         android:layout_alignParentRight="true"
         android:textColor="@color/year" />
 
+    <ImageView
+        android:id="@+id/movieImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/genre" />
+
 </RelativeLayout>
